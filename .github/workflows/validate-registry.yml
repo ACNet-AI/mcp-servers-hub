@@ -61,31 +61,31 @@ jobs:
         import requests
         import sys
         
-                 # Load registry
-         with open('registry.json', 'r') as f:
-             registry = json.load(f)
-         
-         # Check if repositories exist (with timeout)
-         for project in registry.get('projects', []):
-             repo_url = project['repository']
-             
-             try:
-                 response = requests.head(repo_url, timeout=15)
-                 if response.status_code == 404:
-                     print(f'❌ Repository not found: {repo_url}')
-                     print(f'   Please ensure the repository exists and is public')
-                     sys.exit(1)
-                 elif response.status_code == 403:
-                     print(f'⚠️  Repository access restricted: {project[\"name\"]} (this may be normal for private repos)')
-                 elif response.status_code != 200:
-                     print(f'⚠️  Warning: Repository {repo_url} returned status {response.status_code}')
-                 else:
-                     print(f'✅ Repository accessible: {project[\"name\"]}')
-             except requests.RequestException as e:
-                 print(f'⚠️  Warning: Could not validate repository {project[\"name\"]}: {e}')
-                 print(f'   This may be due to network issues or rate limiting')
-         
-         print(f'✅ Link validation completed for {len(registry[\"projects\"])} projects')
+        # Load registry
+        with open('registry.json', 'r') as f:
+            registry = json.load(f)
+        
+        # Check if repositories exist (with timeout)
+        for project in registry.get('projects', []):
+            repo_url = project['repository']
+            
+            try:
+                response = requests.head(repo_url, timeout=15)
+                if response.status_code == 404:
+                    print(f'❌ Repository not found: {repo_url}')
+                    print(f'   Please ensure the repository exists and is public')
+                    sys.exit(1)
+                elif response.status_code == 403:
+                    print(f'⚠️  Repository access restricted: {project[\"name\"]} (this may be normal for private repos)')
+                elif response.status_code != 200:
+                    print(f'⚠️  Warning: Repository {repo_url} returned status {response.status_code}')
+                else:
+                    print(f'✅ Repository accessible: {project[\"name\"]}')
+            except requests.RequestException as e:
+                print(f'⚠️  Warning: Could not validate repository {project[\"name\"]}: {e}')
+                print(f'   This may be due to network issues or rate limiting')
+        
+        print(f'✅ Link validation completed for {len(registry[\"projects\"])} projects')
         "
         
     - name: Check for duplicates
