@@ -1,0 +1,111 @@
+name: Validate Registry
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        pip install requests jsonschema
+        
+    - name: Validate JSON format
+      run: |
+        python -m json.tool registry.json > /dev/null
+        echo "✅ JSON format is valid"
+        
+    - name: Validate JSON Schema
+      run: |
+        python -c "
+        import json
+        import jsonschema
+        import sys
+        
+        # Load schema and registry
+        with open('registry-schema.json', 'r') as f:
+            schema = json.load(f)
+        with open('registry.json', 'r') as f:
+            registry = json.load(f)
+        
+        # Validate against schema
+        try:
+            jsonschema.validate(registry, schema)
+            print('✅ Schema validation passed')
+        except jsonschema.ValidationError as e:
+            print(f'❌ Schema validation failed: {e.message}')
+            print(f'   Path: {\" -> \".join(str(p) for p in e.path)}')
+            sys.exit(1)
+        except Exception as e:
+            print(f'❌ Schema validation error: {e}')
+            sys.exit(1)
+        "
+        
+    - name: Validate links and additional checks
+      run: |
+        python -c "
+        import json
+        import requests
+        import sys
+        
+                 # Load registry
+         with open('registry.json', 'r') as f:
+             registry = json.load(f)
+         
+         # Check if repositories exist (with timeout)
+         for project in registry.get('projects', []):
+             repo_url = project['repository']
+             
+             try:
+                 response = requests.head(repo_url, timeout=15)
+                 if response.status_code == 404:
+                     print(f'❌ Repository not found: {repo_url}')
+                     print(f'   Please ensure the repository exists and is public')
+                     sys.exit(1)
+                 elif response.status_code == 403:
+                     print(f'⚠️  Repository access restricted: {project[\"name\"]} (this may be normal for private repos)')
+                 elif response.status_code != 200:
+                     print(f'⚠️  Warning: Repository {repo_url} returned status {response.status_code}')
+                 else:
+                     print(f'✅ Repository accessible: {project[\"name\"]}')
+             except requests.RequestException as e:
+                 print(f'⚠️  Warning: Could not validate repository {project[\"name\"]}: {e}')
+                 print(f'   This may be due to network issues or rate limiting')
+         
+         print(f'✅ Link validation completed for {len(registry[\"projects\"])} projects')
+        "
+        
+    - name: Check for duplicates
+      run: |
+        python -c "
+        import json
+        
+        with open('registry.json', 'r') as f:
+            registry = json.load(f)
+        
+        names = [p['name'] for p in registry.get('projects', [])]
+        repos = [p['repository'] for p in registry.get('projects', [])]
+        
+        if len(names) != len(set(names)):
+            print('❌ Duplicate project names found')
+            exit(1)
+            
+        if len(repos) != len(set(repos)):
+            print('❌ Duplicate repository URLs found')
+            exit(1)
+            
+        print('✅ No duplicates found')
+        " 

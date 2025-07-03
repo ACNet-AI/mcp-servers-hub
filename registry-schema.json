@@ -1,0 +1,125 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/ACNet-AI/mcp-servers-hub/main/registry-schema.json",
+  "title": "MCP Servers Registry",
+  "description": "Schema for MCP Servers Hub registry.json - Python MCP servers created by MCP Factory",
+  "type": "object",
+  "required": ["version", "updated", "projects"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Registry format version (semantic versioning)"
+    },
+    "updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last update timestamp in ISO 8601 format"
+    },
+    "projects": {
+      "type": "array",
+      "description": "List of registered MCP server projects created by MCP Factory",
+      "items": {
+        "$ref": "#/definitions/project"
+      }
+    }
+  },
+  "definitions": {
+    "project": {
+      "type": "object",
+      "required": ["name", "author", "description", "repository", "language", "tags", "license", "created", "python_version"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",
+          "minLength": 3,
+          "maxLength": 50,
+          "description": "MCP server project name (lowercase, kebab-case)"
+        },
+        "author": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9]([a-zA-Z0-9-]){0,38}$",
+          "description": "GitHub username of the project author"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 200,
+          "description": "Brief description of the MCP server functionality"
+        },
+        "repository": {
+          "type": "string",
+          "pattern": "^https://github\\.com/[a-zA-Z0-9][a-zA-Z0-9-]{0,38}/[a-zA-Z0-9][a-zA-Z0-9._-]*$",
+          "description": "GitHub repository URL"
+        },
+        "language": {
+          "type": "string",
+          "const": "python",
+          "description": "Programming language (Python only for MCP Factory projects)"
+        },
+        "python_version": {
+          "type": "string",
+          "pattern": "^3\\.(10|11|12|13)$",
+          "description": "Minimum Python version required (3.10, 3.11, 3.12, or 3.13)"
+        },
+        "tags": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "database", "api", "tools", "automation", "data", "web", "files", 
+              "ai", "ml", "cloud", "monitoring", "security", "testing", "dev-tools",
+              "productivity", "integration", "analytics", "communication", "finance",
+              "media", "storage", "search", "notifications", "workflow"
+            ]
+          },
+          "description": "Predefined tags for MCP server categorization"
+        },
+        "license": {
+          "type": "string",
+          "enum": ["MIT", "Apache-2.0", "GPL-3.0", "BSD-3-Clause", "ISC", "other"],
+          "description": "Software license (common open source licenses, use 'other' for unlisted licenses)"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Project creation timestamp in ISO 8601 format"
+        },
+        "mcp_factory": {
+          "type": "object",
+          "description": "MCP Factory specific metadata",
+          "properties": {
+            "version": {
+              "type": "string",
+              "description": "MCP Factory version used to create this project"
+            },
+            "template": {
+              "type": "string",
+              "enum": ["basic", "advanced", "database", "api", "tool"],
+              "description": "Template type used by MCP Factory"
+            }
+          }
+        },
+        "homepage": {
+          "type": "string",
+          "format": "uri",
+          "description": "Optional project homepage URL"
+        },
+        "documentation": {
+          "type": "string",
+          "format": "uri", 
+          "description": "Optional documentation URL"
+        }
+      }
+    }
+  }
+} 
