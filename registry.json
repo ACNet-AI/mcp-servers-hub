@@ -1,7 +1,7 @@
 {
   "$schema": "./registry-schema.json",
   "version": "1.0.0",
-  "updated": "2025-07-23T04:43:56.835Z",
+  "updated": "2025-07-23T04:53:22.395Z",
   "projects": [
     {
       "name": "weather-server",
@@ -9,9 +9,10 @@
       "version": "1.0.0",
       "language": "python",
       "category": "server",
+      "author": "NeilJo-GY",
       "repository": "https://github.com/NeilJo-GY/weather-server",
       "tags": [],
-      "addedAt": "2025-07-23T04:43:56.835Z"
+      "addedAt": "2025-07-23T04:53:22.395Z"
     }
   ]
 }
