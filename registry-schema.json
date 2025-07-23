@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://raw.githubusercontent.com/ACNet-AI/mcp-servers-hub/main/registry-schema.json",
   "title": "MCP Servers Registry",
-  "description": "Schema for MCP Servers Hub registry.json - Python MCP servers created by MCP Factory",
+  "description": "MCP Factory project registry schema - fully automated registration and approval",
   "type": "object",
   "required": ["version", "updated", "projects"],
   "additionalProperties": false,
@@ -14,25 +14,22 @@
     "version": {
       "type": "string",
       "pattern": "^\\d+\\.\\d+\\.\\d+$",
-      "description": "Registry format version (semantic versioning)"
+      "description": "Registry format version"
     },
     "updated": {
       "type": "string",
       "format": "date-time",
-      "description": "Last update timestamp in ISO 8601 format"
+      "description": "Last update timestamp"
     },
     "projects": {
       "type": "array",
-      "description": "List of registered MCP server projects created by MCP Factory",
-      "items": {
-        "$ref": "#/definitions/project"
-      }
+      "items": {"$ref": "#/definitions/project"}
     }
   },
   "definitions": {
     "project": {
       "type": "object",
-      "required": ["name", "author", "description", "repository", "language", "tags", "license", "created", "python_version"],
+      "required": ["name", "author", "description", "repository", "language", "registration", "status"],
       "additionalProperties": false,
       "properties": {
         "name": {
@@ -40,18 +37,18 @@
           "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",
           "minLength": 3,
           "maxLength": 50,
-          "description": "MCP server project name (lowercase, kebab-case)"
+          "description": "Project name (lowercase, kebab-case)"
         },
         "author": {
           "type": "string",
           "pattern": "^[a-zA-Z0-9]([a-zA-Z0-9-]){0,38}$",
-          "description": "GitHub username of the project author"
+          "description": "GitHub username"
         },
         "description": {
           "type": "string",
           "minLength": 10,
-          "maxLength": 200,
-          "description": "Brief description of the MCP server functionality"
+          "maxLength": 500,
+          "description": "Project description"
         },
         "repository": {
           "type": "string",
@@ -61,63 +58,140 @@
         "language": {
           "type": "string",
           "const": "python",
-          "description": "Programming language (Python only for MCP Factory projects)"
+          "description": "Programming language (MCP Factory projects only support Python)"
         },
-        "python_version": {
-          "type": "string",
-          "pattern": "^3\\.(10|11|12|13)$",
-          "description": "Minimum Python version required (3.10, 3.11, 3.12, or 3.13)"
-        },
-        "tags": {
-          "type": "array",
-          "minItems": 1,
-          "maxItems": 8,
-          "uniqueItems": true,
-          "items": {
-            "type": "string",
-            "enum": [
-              "database", "api", "tools", "automation", "data", "web", "files", 
-              "ai", "ml", "cloud", "monitoring", "security", "testing", "dev-tools",
-              "productivity", "integration", "analytics", "communication", "finance",
-              "media", "storage", "search", "notifications", "workflow"
-            ]
-          },
-          "description": "Predefined tags for MCP server categorization"
-        },
-        "license": {
-          "type": "string",
-          "enum": ["MIT", "Apache-2.0", "GPL-3.0", "BSD-3-Clause", "ISC", "other"],
-          "description": "Software license (common open source licenses, use 'other' for unlisted licenses)"
-        },
-        "created": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Project creation timestamp in ISO 8601 format"
-        },
-        "mcp_factory": {
+        "registration": {
           "type": "object",
-          "description": "MCP Factory specific metadata",
+          "required": ["method", "timestamp"],
           "properties": {
-            "version": {
-              "type": "string",
-              "description": "MCP Factory version used to create this project"
+            "method": {
+              "type": "string", 
+              "enum": ["webhook_auto", "manual_submit"],
+              "description": "Registration method"
             },
-            "template": {
+            "timestamp": {
               "type": "string",
-              "enum": ["basic", "advanced", "database", "api", "tool"],
-              "description": "Template type used by MCP Factory"
+              "format": "date-time",
+              "description": "Registration timestamp"
+            },
+            "webhook_version": {
+              "type": "string",
+              "description": "Webhook service version (for automatic registration)"
+            },
+            "factory_version": {
+              "type": "string",
+              "description": "MCP Factory version"
             }
           }
         },
-        "homepage": {
-          "type": "string",
-          "format": "uri",
-          "description": "Optional project homepage URL"
+        "status": {
+          "type": "object",
+          "required": ["verification_status", "quality_score", "auto_approved_at"],
+          "properties": {
+            "verification_status": {
+              "type": "string",
+              "enum": ["approved", "rejected"],
+              "description": "Automatic verification status: approved (passed quality threshold) or rejected (failed quality threshold)"
+            },
+            "quality_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Quality score (0-1)"
+            },
+            "structure_compliance": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "MCP Factory structure compliance (0-1)"
+            },
+            "auto_approved_at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Automatic approval/rejection timestamp"
+            },
+            "approval_reason": {
+              "type": "string",
+              "description": "Automatic approval/rejection reason based on quality metrics"
+            }
+          }
         },
-        "documentation": {
-          "type": "string",
-          "format": "uri", 
-          "description": "Optional documentation URL"
+        "mcp_factory": {
+          "type": "object",
+          "description": "MCP Factory specific data",
+          "properties": {
+            "version": {
+              "type": "string",
+              "description": "Factory version"
+            },
+            "category": {
+              "type": "string",
+              "enum": ["server", "tools", "resources", "prompts"],
+              "description": "MCP project category"
+            },
+            "structure_check": {
+              "type": "object",
+              "properties": {
+                "required_files": {
+                  "type": "object",
+                  "properties": {
+                    "pyproject_toml": {"type": "boolean"},
+                    "server_py": {"type": "boolean"},
+                    "readme": {"type": "boolean"}
+                  }
+                },
+                "required_directories": {
+                  "type": "object", 
+                  "properties": {
+                    "tools": {"type": "boolean"},
+                    "resources": {"type": "boolean"},
+                    "prompts": {"type": "boolean"}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "auto_detected": {
+          "type": "object",
+          "description": "Auto-detected project information",
+          "properties": {
+            "license": {
+              "type": "string",
+              "description": "Detected license"
+            },
+            "python_version": {
+              "type": "string", 
+              "description": "Detected minimum Python version"
+            },
+            "tags": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "Tags generated based on code analysis"
+            },
+            "dependencies": {
+              "type": "object",
+              "properties": {
+                "mcp_related": {
+                  "type": "array", 
+                  "items": {"type": "string"},
+                  "description": "MCP-related dependencies"
+                },
+                "main_packages": {
+                  "type": "array", 
+                  "items": {"type": "string"},
+                  "description": "Main dependency packages"
+                }
+              }
+            },
+            "confidence": {
+              "type": "object",
+              "patternProperties": {
+                ".*": {"type": "number", "minimum": 0, "maximum": 1}
+              },
+              "description": "Confidence scores for each detection item"
+            }
+          }
         }
       }
     }
