@@ -2,5 +2,22 @@
   "$schema": "./registry-schema.json",
   "version": "2.0.0",
   "updated": "2025-07-23T08:27:31Z",
-  "projects": []
-} 
+  "projects": [
+    {
+      "name": "weather-server",
+      "author": "NeilJo-GY",
+      "description": "MCP server: weather-server",
+      "repository": "https://github.com/NeilJo-GY/weather-server",
+      "category": "server",
+      "status": "approved",
+      "version": "1.0.0",
+      "registered_at": "2025-07-24T03:29:39.035Z",
+      "tags": [],
+      "dependencies": [
+        "mcp-factory>=0.1.0"
+      ],
+      "python_version": "3.10",
+      "quality_score": 100
+    }
+  ]
+}
