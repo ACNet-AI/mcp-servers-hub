@@ -11,7 +11,7 @@
       "category": "server",
       "status": "approved",
       "version": "1.0.0",
-      "registered_at": "2025-07-25T03:33:16.352Z",
+      "registered_at": "2025-07-25T04:39:48.090Z",
       "tags": [],
       "dependencies": [
         "mcp-factory>=0.1.0"
