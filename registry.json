@@ -2,5 +2,22 @@
   "$schema": "./registry-schema.json",
   "version": "2.0.0",
   "updated": "2025-07-23T08:27:31Z",
-  "projects": []
+  "projects": [
+    {
+      "name": "test111",
+      "author": "NeilJo-GY",
+      "description": "MCP server: test111",
+      "repository": "https://github.com/NeilJo-GY/test111",
+      "category": "server",
+      "status": "rejected",
+      "version": "1.0.0",
+      "registered_at": "2025-08-29T11:49:21.414Z",
+      "tags": [],
+      "dependencies": [
+        "mcp-factory>=0.1.0"
+      ],
+      "python_version": "3.10",
+      "quality_score": 100
+    }
+  ]
 }
