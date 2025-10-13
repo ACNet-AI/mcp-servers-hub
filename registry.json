@@ -18,6 +18,22 @@
       ],
       "python_version": "3.10",
       "quality_score": 100
+    },
+    {
+      "name": "devops-mcp-server",
+      "author": "ACNet-AI",
+      "description": "MCP server: devops-mcp-server",
+      "repository": "https://github.com/ACNet-AI/devops-mcp-server",
+      "category": "server",
+      "status": "approved",
+      "version": "1.0.0",
+      "registered_at": "2025-10-13T23:51:19.597Z",
+      "tags": [],
+      "dependencies": [
+        "mcp-factory>=1.6.0"
+      ],
+      "python_version": "3.10",
+      "quality_score": 100
     }
   ]
 }
