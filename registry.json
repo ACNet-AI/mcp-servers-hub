@@ -22,12 +22,12 @@
     {
       "name": "devops-mcp-server",
       "author": "ACNet-AI",
-      "description": "MCP server: devops-mcp-server",
+      "description": "Universal DevOps MCP Server - Deploy, monitor, and manage applications through conversation",
       "repository": "https://github.com/ACNet-AI/devops-mcp-server",
       "category": "server",
       "status": "approved",
-      "version": "1.0.0",
-      "registered_at": "2025-10-13T23:51:19.597Z",
+      "version": "0.3.2",
+      "registered_at": "2025-10-16T12:16:14.996Z",
       "tags": [],
       "dependencies": [
         "mcp-factory>=1.6.0"
