@@ -34,6 +34,22 @@
       ],
       "python_version": "3.10",
       "quality_score": 100
+    },
+    {
+      "name": "mcp-factory-platform-server",
+      "author": "ACNet-AI",
+      "description": "MCP Factory Platform Server - Agent interface for platform management",
+      "repository": "https://github.com/ACNet-AI/mcp-factory-platform-server",
+      "category": "server",
+      "status": "approved",
+      "version": "1.3.0",
+      "registered_at": "2025-10-18T07:18:53.861Z",
+      "tags": [],
+      "dependencies": [
+        "mcp-factory>=1.6.0"
+      ],
+      "python_version": "3.10",
+      "quality_score": 100
     }
   ]
 }
